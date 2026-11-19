@@ -1,0 +1,2759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#070a12">
+  <title>Maths Racer - Class 9 CBSE Turbo Championship</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =====================================================================
+       CSS DESIGN SYSTEM - DARK RACING THEME WITH CYAN & RED NEON
+       ===================================================================== */
+    :root {
+      --bg-dark: #070a12;
+      --bg-surface: #0e1422;
+      --bg-card: rgba(18, 25, 42, 0.85);
+      --bg-card-border: rgba(0, 240, 255, 0.25);
+      
+      --neon-cyan: #00f0ff;
+      --neon-cyan-glow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 35px rgba(0, 240, 255, 0.3);
+      --neon-cyan-soft: rgba(0, 240, 255, 0.15);
+
+      --neon-red: #ff0055;
+      --neon-red-glow: 0 0 15px rgba(255, 0, 85, 0.7), 0 0 35px rgba(255, 0, 85, 0.35);
+      --neon-red-soft: rgba(255, 0, 85, 0.15);
+
+      --neon-green: #00ffaa;
+      --neon-green-glow: 0 0 15px rgba(0, 255, 170, 0.7), 0 0 30px rgba(0, 255, 170, 0.35);
+
+      --neon-gold: #ffd000;
+      --neon-gold-glow: 0 0 15px rgba(255, 208, 0, 0.6);
+
+      --text-main: #f0f6fc;
+      --text-muted: #8b9bb4;
+      --font-display: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-body: 'Rajdhani', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      --road-color: #0b101c;
+      --road-border: #1a253c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 85% 90%, rgba(255, 0, 85, 0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, #070a12 0%, #05070c 100%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Ambient cyber grid scanline */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                  linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top navigation / header */
+    .app-header {
+      position: relative;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(7, 10, 18, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      fill: var(--neon-cyan);
+      filter: drop-shadow(0 0 8px var(--neon-cyan));
+    }
+
+    .brand-text {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.15rem;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--neon-cyan), #ffffff, var(--neon-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      background: rgba(14, 20, 34, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: var(--neon-cyan);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1.1rem;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: var(--neon-cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    .icon-btn.muted {
+      color: var(--neon-red);
+      border-color: rgba(255, 0, 85, 0.4);
+    }
+
+    /* Main Container for all screens */
+    .app-viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 10;
+      max-width: 1050px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Screen transitions */
+    .screen {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      flex: 1;
+      animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Common Button Styles */
+    .btn-cyber {
+      font-family: var(--font-display);
+      text-transform: uppercase;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      padding: 14px 28px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      position: relative;
+      clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      touch-action: manipulation;
+    }
+
+    .btn-cyan {
+      background: linear-gradient(135deg, #00d9ff, #0088cc);
+      color: #050811;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.45);
+    }
+
+    .btn-cyan:hover, .btn-cyan:focus {
+      background: linear-gradient(135deg, #4df3ff, #00bfff);
+      box-shadow: var(--neon-cyan-glow), 0 0 45px rgba(0, 240, 255, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-red {
+      background: linear-gradient(135deg, #ff1744, #b3003b);
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(255, 23, 68, 0.5);
+    }
+
+    .btn-red:hover, .btn-red:focus {
+      background: linear-gradient(135deg, #ff4070, #ff0055);
+      box-shadow: var(--neon-red-glow), 0 0 45px rgba(255, 0, 85, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: rgba(14, 20, 34, 0.8);
+      color: var(--neon-cyan);
+      border: 1px solid var(--neon-cyan);
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    }
+
+    .btn-outline:hover {
+      background: var(--neon-cyan-soft);
+      box-shadow: var(--neon-cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-cyber:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    /* Glass card container */
+    .glass-panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--bg-card-border);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    /* Corner neon accents for cards */
+    .glass-panel::after {
+      content: '';
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      width: 25px;
+      height: 25px;
+      border-top: 2px solid var(--neon-cyan);
+      border-right: 2px solid var(--neon-cyan);
+      border-top-right-radius: 14px;
+      pointer-events: none;
+    }
+
+    .glass-panel::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: -1px;
+      width: 25px;
+      height: 25px;
+      border-bottom: 2px solid var(--neon-red);
+      border-left: 2px solid var(--neon-red);
+      border-bottom-left-radius: 14px;
+      pointer-events: none;
+    }
+
+    /* =====================================================================
+       1. HOME SCREEN STYLES
+       ===================================================================== */
+    #screen-home {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 24px;
+      padding: 20px 0;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 30px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      color: var(--neon-cyan);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+    }
+
+    .hero-title-container {
+      position: relative;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background: linear-gradient(180deg, #ffffff 20%, var(--neon-cyan) 65%, #0088cc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.45));
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .hero-subtitle span {
+      color: var(--neon-red);
+      text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+    }
+
+    .home-hero-car {
+      width: 100%;
+      max-width: 440px;
+      height: 140px;
+      margin: 10px auto;
+      filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 20px rgba(0, 240, 255, 0.3));
+      animation: floatCar 3.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatCar {
+      from { transform: translateY(0px) rotate(0deg); }
+      to { transform: translateY(-8px) rotate(0.5deg); }
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 780px;
+      margin: 10px auto;
+    }
+
+    .feature-card {
+      background: rgba(14, 20, 34, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .feature-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .feature-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .home-cta-box {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .high-score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 208, 0, 0.1);
+      border: 1px solid rgba(255, 208, 0, 0.3);
+      padding: 6px 18px;
+      border-radius: 20px;
+      color: var(--neon-gold);
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    /* =====================================================================
+       2. SETUP SCREEN STYLES
+       ===================================================================== */
+    #screen-setup {
+      gap: 20px;
+    }
+
+    .setup-header {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .setup-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .setup-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 16px;
+      background: var(--neon-cyan);
+      box-shadow: var(--neon-cyan-glow);
+    }
+
+    /* Hypercar selector grid */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .cars-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+
+    .car-card {
+      background: rgba(14, 20, 34, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 16px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .car-card:hover {
+      border-color: rgba(0, 240, 255, 0.5);
+      background: rgba(20, 28, 48, 0.8);
+      transform: translateY(-3px);
+    }
+
+    .car-card.selected {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25), inset 0 0 15px rgba(0, 240, 255, 0.1);
+    }
+
+    .car-card.selected::before {
+      content: 'SELECTED';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: #050811;
+      background: var(--neon-cyan);
+      padding: 2px 8px;
+      border-radius: 4px;
+      box-shadow: 0 0 8px var(--neon-cyan);
+    }
+
+    .car-preview-box {
+      width: 100%;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .car-card-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: 1px;
+    }
+
+    .car-card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .car-stat-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #b5c2d9;
+      margin-top: 4px;
+    }
+
+    .stat-bar-container {
+      width: 55%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .stat-bar-fill {
+      height: 100%;
+      background: var(--neon-cyan);
+      border-radius: 3px;
+    }
+
+    /* Chapter selector grid */
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .chapter-card {
+      background: rgba(14, 20, 34, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .chapter-card:hover {
+      border-color: rgba(0, 240, 255, 0.4);
+      background: rgba(20, 28, 48, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .chapter-card.selected {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.12);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .chapter-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--neon-cyan);
+      flex-shrink: 0;
+    }
+
+    .chapter-card.selected .chapter-icon {
+      background: var(--neon-cyan);
+      color: #050811;
+      box-shadow: 0 0 12px var(--neon-cyan);
+    }
+
+    .chapter-name {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.25;
+    }
+
+    .chapter-count {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .setup-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    /* =====================================================================
+       3. RACE SCREEN STYLES (TRACK, CARS, HUD, QUESTION)
+       ===================================================================== */
+    #screen-race {
+      gap: 16px;
+      padding-bottom: 24px;
+    }
+
+    /* Race HUD Top Bar */
+    .race-hud {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(14, 20, 34, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.25);
+      border-radius: 12px;
+      padding: 10px 18px;
+    }
+
+    .hud-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hud-label {
+      font-family: var(--font-display);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .hud-value {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .hud-score {
+      color: var(--neon-gold);
+      text-shadow: 0 0 10px rgba(255, 208, 0, 0.4);
+    }
+
+    .hud-leader-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .badge-leading {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    .badge-chasing {
+      background: rgba(255, 0, 85, 0.15);
+      border: 1px solid var(--neon-red);
+      color: var(--neon-red);
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.3);
+    }
+
+    /* RACE TRACK (2 LANES) */
+    .track-viewport {
+      background: var(--road-color);
+      border: 2px solid var(--road-border);
+      border-radius: 14px;
+      padding: 8px 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9), 0 8px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Ambient neon road edge rails */
+    .track-viewport::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-cyan), rgba(0, 240, 255, 0.4));
+      box-shadow: 0 0 12px var(--neon-cyan);
+      z-index: 5;
+    }
+
+    .track-viewport::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--neon-red), rgba(255, 0, 85, 0.4));
+      box-shadow: 0 0 12px var(--neon-red);
+      z-index: 5;
+    }
+
+    /* Asphalt moving texture simulation */
+    .lane {
+      position: relative;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      border-bottom: 2px dashed rgba(255, 255, 255, 0.15);
+      padding: 0 20px;
+    }
+
+    .lane:last-child {
+      border-bottom: none;
+    }
+
+    .lane-label {
+      position: absolute;
+      left: 12px;
+      top: 8px;
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      z-index: 2;
+    }
+
+    .label-player {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 8px var(--neon-cyan);
+    }
+
+    .label-rival {
+      color: var(--neon-red);
+      text-shadow: 0 0 8px var(--neon-red);
+    }
+
+    /* Checkered Finish Line */
+    .finish-line {
+      position: absolute;
+      right: 28px;
+      top: 0;
+      bottom: 0;
+      width: 22px;
+      background: repeating-linear-gradient(
+        45deg,
+        #ffffff 0,
+        #ffffff 6px,
+        #0b101c 6px,
+        #0b101c 12px
+      );
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+      z-index: 3;
+      border-left: 2px solid #ffd000;
+      border-right: 2px solid #ffd000;
+    }
+
+    .finish-banner {
+      position: absolute;
+      right: 18px;
+      top: -2px;
+      font-family: var(--font-display);
+      font-size: 0.55rem;
+      font-weight: 900;
+      background: #ffd000;
+      color: #050811;
+      padding: 1px 6px;
+      border-radius: 2px;
+      letter-spacing: 1px;
+      z-index: 6;
+    }
+
+    /* Car sprites on the track */
+    .car-sprite {
+      position: absolute;
+      left: 20px; /* modified dynamically via transform/left */
+      width: 140px;
+      height: 52px;
+      transition: left 0.9s cubic-bezier(0.2, 0.8, 0.25, 1);
+      z-index: 4;
+      filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.9));
+      display: flex;
+      align-items: center;
+    }
+
+    .car-sprite svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* Nitro boost fire effect */
+    .nitro-boost {
+      animation: nitroShake 0.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes nitroShake {
+      from { transform: translateY(-1px); }
+      to { transform: translateY(1.5px); }
+    }
+
+    .exhaust-flame {
+      position: absolute;
+      left: -24px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 14px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .car-sprite.surging .exhaust-flame {
+      opacity: 1;
+      animation: flamePulse 0.1s infinite alternate;
+    }
+
+    @keyframes flamePulse {
+      0% { transform: translateY(-50%) scaleX(0.85); filter: drop-shadow(0 0 8px #00f0ff); }
+      100% { transform: translateY(-50%) scaleX(1.3); filter: drop-shadow(0 0 15px #00f0ff); }
+    }
+
+    .car-sprite.rival-surging .exhaust-flame {
+      opacity: 1;
+      animation: rivalFlamePulse 0.1s infinite alternate;
+    }
+
+    @keyframes rivalFlamePulse {
+      0% { transform: translateY(-50%) scaleX(0.85); filter: drop-shadow(0 0 8px #ff0055); }
+      100% { transform: translateY(-50%) scaleX(1.3); filter: drop-shadow(0 0 15px #ff0055); }
+    }
+
+    /* 15-SECOND TIMER BAR */
+    .timer-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .timer-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+    }
+
+    .timer-title {
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .timer-seconds {
+      color: var(--neon-cyan);
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    .timer-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(14, 20, 34, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .timer-fill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #00b8ff, var(--neon-cyan));
+      border-radius: 4px;
+      box-shadow: 0 0 12px var(--neon-cyan);
+      transition: width 0.05s linear, background-color 0.3s ease;
+    }
+
+    .timer-fill.warning {
+      background: linear-gradient(90deg, #ff9900, #ffd000);
+      box-shadow: 0 0 12px #ffd000;
+    }
+
+    .timer-fill.danger {
+      background: linear-gradient(90deg, #ff1744, var(--neon-red));
+      box-shadow: 0 0 15px var(--neon-red);
+      animation: dangerPulse 0.3s infinite alternate;
+    }
+
+    @keyframes dangerPulse {
+      from { opacity: 0.8; }
+      to { opacity: 1; }
+    }
+
+    /* QUESTION CARD */
+    .question-panel {
+      background: var(--bg-card);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    .question-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .question-chapter-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .question-score-indicator {
+      font-size: 0.8rem;
+      color: var(--neon-gold);
+      font-weight: 700;
+    }
+
+    .question-text {
+      font-size: clamp(1.15rem, 3.5vw, 1.45rem);
+      font-weight: 600;
+      line-height: 1.45;
+      color: #ffffff;
+      min-height: 52px;
+    }
+
+    /* 4 MULTIPLE CHOICE OPTIONS */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 650px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .option-btn {
+      background: rgba(14, 20, 34, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      color: #e2e8f0;
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: left;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 240, 255, 0.2);
+    }
+
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .option-btn:hover:not(:disabled) .option-letter {
+      background: var(--neon-cyan);
+      color: #050811;
+      border-color: var(--neon-cyan);
+    }
+
+    /* Answer Feedback states */
+    .option-btn.correct {
+      background: rgba(0, 255, 170, 0.2) !important;
+      border-color: var(--neon-green) !important;
+      color: #ffffff !important;
+      box-shadow: var(--neon-green-glow);
+      animation: correctPulse 0.4s ease-in-out;
+    }
+
+    .option-btn.correct .option-letter {
+      background: var(--neon-green) !important;
+      color: #050811 !important;
+      border-color: var(--neon-green) !important;
+    }
+
+    .option-btn.wrong {
+      background: rgba(255, 0, 85, 0.25) !important;
+      border-color: var(--neon-red) !important;
+      color: #ffffff !important;
+      box-shadow: var(--neon-red-glow);
+      animation: wrongShake 0.4s ease-in-out;
+    }
+
+    .option-btn.wrong .option-letter {
+      background: var(--neon-red) !important;
+      color: #ffffff !important;
+      border-color: var(--neon-red) !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    @keyframes correctPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    /* Floating Score Popups */
+    .score-popup {
+      position: absolute;
+      top: -24px;
+      right: 18px;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--neon-green);
+      text-shadow: var(--neon-green-glow);
+      pointer-events: none;
+      animation: floatScore 1s forwards cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes floatScore {
+      0% { opacity: 0; transform: translateY(0); }
+      20% { opacity: 1; transform: translateY(-8px); }
+      100% { opacity: 0; transform: translateY(-24px); }
+    }
+
+    /* =====================================================================
+       4. RESULT SCREEN STYLES
+       ===================================================================== */
+    #screen-result {
+      align-items: center;
+      text-align: center;
+      gap: 20px;
+      padding: 10px 0 30px;
+    }
+
+    .result-trophy-box {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+      filter: drop-shadow(0 0 25px rgba(255, 208, 0, 0.5));
+    }
+
+    .result-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .result-title.player-won {
+      background: linear-gradient(180deg, #ffffff, var(--neon-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.5));
+    }
+
+    .result-title.rival-won {
+      background: linear-gradient(180deg, #ffffff, var(--neon-red));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 15px rgba(255, 0, 85, 0.5));
+    }
+
+    .result-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .stats-dashboard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 760px;
+    }
+
+    @media (max-width: 600px) {
+      .stats-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat-metric-card {
+      background: rgba(14, 20, 34, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .metric-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #fff;
+    }
+
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Review questions accordion */
+    .review-section {
+      width: 100%;
+      max-width: 760px;
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    .review-toggle-btn {
+      width: 100%;
+      background: rgba(14, 20, 34, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 8px;
+      padding: 12px 18px;
+      color: var(--neon-cyan);
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .review-list {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .review-list.open {
+      display: flex;
+    }
+
+    .review-item {
+      background: rgba(14, 20, 34, 0.85);
+      border-left: 4px solid var(--neon-cyan);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.9rem;
+    }
+
+    .review-item.wrong-item {
+      border-left-color: var(--neon-red);
+    }
+
+    .review-q-text {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .review-ans-row {
+      display: flex;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .ans-correct {
+      color: var(--neon-green);
+    }
+
+    .ans-user-wrong {
+      color: var(--neon-red);
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    /* COUNTDOWN OVERLAY */
+    .countdown-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.9);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .countdown-overlay.active {
+      display: flex;
+    }
+
+    .countdown-number {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 15vw, 9rem);
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: var(--neon-cyan-glow), 0 0 60px var(--neon-cyan);
+      animation: countPulse 0.85s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    .countdown-number.go {
+      color: var(--neon-green);
+      text-shadow: var(--neon-green-glow), 0 0 70px var(--neon-green);
+    }
+
+    @keyframes countPulse {
+      0% { transform: scale(0.6); opacity: 0; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Responsive Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 240, 255, 0.3);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-cyan);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP APP HEADER -->
+  <header class="app-header">
+    <div class="brand-container" onclick="Navigation.goHome()">
+      <!-- Turbo flag icon -->
+      <svg class="brand-icon" viewBox="0 0 24 24">
+        <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6zm3.6 8h-3.4l-.4-2H7V6h5.4l.4 2H18v6z"/>
+      </svg>
+      <div class="brand-text">Maths Racer</div>
+    </div>
+
+    <div class="header-actions">
+      <!-- High Score pill -->
+      <div class="high-score-pill" title="Personal Best Score">
+        <span>🏆 BEST:</span>
+        <span id="header-best-score">0</span>
+      </div>
+      <!-- Audio Toggle -->
+      <button class="icon-btn" id="audio-toggle-btn" title="Toggle Sound (Mute/Unmute)" onclick="SoundFX.toggleMute()">
+        <span id="audio-icon">🔊</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- VIEWPORT / SCREEN CONTAINER -->
+  <main class="app-viewport">
+
+    <!-- ==============================================================
+         1. HOME SCREEN
+         ============================================================== -->
+    <section id="screen-home" class="screen active">
+      <div class="hero-badge">CBSE CLASS 9 MATHEMATICS</div>
+      
+      <div class="hero-title-container">
+        <h1 class="hero-title">MATHS RACER</h1>
+        <div class="hero-subtitle">High-Octane <span>Formula</span> Challenge</div>
+      </div>
+
+      <!-- Hero hypercar showcase -->
+      <div class="home-hero-car" id="home-car-showcase">
+        <!-- Injected via SVG Engine -->
+      </div>
+
+      <!-- Feature highlight cards -->
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🏎️</div>
+          <div>
+            <div class="feature-title">Turbo Racing HUD</div>
+            <div class="feature-desc">Speed along the dual-lane neon circuit against an aggressive rival hypercar.</div>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div>
+            <div class="feature-title">15s Timer Surge</div>
+            <div class="feature-desc">Answer quickly to bank 10 points plus every remaining second as turbo bonus!</div>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📐</div>
+          <div>
+            <div class="feature-title">CBSE Class 9 Syllabus</div>
+            <div class="feature-desc">100% NCERT curriculum covering Number Systems, Polynomials, Geometry & more.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Box -->
+      <div class="home-cta-box">
+        <button class="btn-cyber btn-cyan" onclick="Navigation.goSetup()">
+          <span>ENTER GARAGE & RACE</span>
+          <span>⚡</span>
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ==============================================================
+         2. SETUP SCREEN (HYPERCAR & CHAPTER SELECTOR)
+         ============================================================== -->
+    <section id="screen-setup" class="screen">
+      <div class="setup-header">
+        <h2 class="setup-title">RACE CONFIGURATION</h2>
+        <p class="setup-subtitle">Select your hypercar chassis and choose your mathematical proving ground</p>
+      </div>
+
+      <div class="glass-panel">
+        <!-- 1. CHOOSE HYPERCAR -->
+        <div class="section-title">1. Choose Your Hypercar</div>
+        <div class="cars-grid" id="cars-selection-container">
+          <!-- 3 Hypercars rendered dynamically -->
+        </div>
+
+        <!-- 2. CHOOSE CHAPTER -->
+        <div class="section-title">2. Choose Chapter or Mixed</div>
+        <div class="chapters-grid" id="chapters-selection-container">
+          <!-- Chapters rendered dynamically -->
+        </div>
+
+        <!-- 3. RACE LENGTH -->
+        <div class="section-title">3. Race Distance (Questions)</div>
+        <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
+          <button class="chapter-card round-count-btn selected" data-rounds="5" onclick="Setup.selectRounds(5, this)" style="flex:1; justify-content:center;">
+            <span class="chapter-name">5 LAPS (SPRINT)</span>
+          </button>
+          <button class="chapter-card round-count-btn" data-rounds="10" onclick="Setup.selectRounds(10, this)" style="flex:1; justify-content:center;">
+            <span class="chapter-name">10 LAPS (GRAND PRIX)</span>
+          </button>
+          <button class="chapter-card round-count-btn" data-rounds="15" onclick="Setup.selectRounds(15, this)" style="flex:1; justify-content:center;">
+            <span class="chapter-name">15 LAPS (ENDURANCE)</span>
+          </button>
+        </div>
+
+        <!-- START BUTTON -->
+        <div class="setup-actions">
+          <button class="btn-cyber btn-cyan" onclick="Setup.startRace()" style="font-size: 1.15rem; padding: 16px 42px;">
+            <span>IGNITE ENGINES</span>
+            <span>🏁</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==============================================================
+         3. RACE SCREEN (RACE TRACK, TIMER & MULTIPLE CHOICE QUESTION)
+         ============================================================== -->
+    <section id="screen-race" class="screen">
+      <!-- Race HUD -->
+      <div class="race-hud">
+        <div class="hud-box">
+          <span class="hud-label">LAP / QUESTION</span>
+          <span class="hud-value" id="hud-lap-counter">1 / 10</span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label">STANDINGS</span>
+          <span class="hud-leader-badge badge-leading" id="hud-leader-badge">P1 • LEADING</span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label">TOTAL SCORE</span>
+          <span class="hud-value hud-score" id="hud-score">0</span>
+        </div>
+      </div>
+
+      <!-- 2-LANE RACING TRACK -->
+      <div class="track-viewport">
+        <!-- Finish Line with Checkered Pattern -->
+        <div class="finish-line"></div>
+        <div class="finish-banner">FINISH</div>
+
+        <!-- Lane 1: Player's Car -->
+        <div class="lane" id="lane-player">
+          <span class="lane-label label-player">YOU: <span id="lane-player-car-name">APEX NEON</span></span>
+          <div class="car-sprite nitro-boost" id="sprite-player">
+            <!-- Exhaust Flame -->
+            <svg class="exhaust-flame" viewBox="0 0 30 16">
+              <polygon points="30,8 10,2 0,8 10,14" fill="#00f0ff"/>
+              <polygon points="26,8 12,4 4,8 12,12" fill="#ffffff"/>
+            </svg>
+            <div id="player-car-svg-container" style="width:100%; height:100%;"></div>
+          </div>
+        </div>
+
+        <!-- Lane 2: Rival's Car -->
+        <div class="lane" id="lane-rival">
+          <span class="lane-label label-rival">RIVAL: SHADOW REAPER</span>
+          <div class="car-sprite nitro-boost" id="sprite-rival">
+            <!-- Exhaust Flame -->
+            <svg class="exhaust-flame" viewBox="0 0 30 16">
+              <polygon points="30,8 10,2 0,8 10,14" fill="#ff0055"/>
+              <polygon points="26,8 12,4 4,8 12,12" fill="#ffffff"/>
+            </svg>
+            <div id="rival-car-svg-container" style="width:100%; height:100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15-SECOND TIMER BAR -->
+      <div class="timer-container">
+        <div class="timer-meta">
+          <span class="timer-title">REACTION TIME REMAINING</span>
+          <span class="timer-seconds" id="timer-text">15.0s</span>
+        </div>
+        <div class="timer-track">
+          <div class="timer-fill" id="timer-fill" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- QUESTION CARD -->
+      <div class="question-panel" style="position: relative;">
+        <div class="question-header">
+          <div class="question-chapter-badge">
+            <span style="color:var(--neon-cyan)">●</span>
+            <span id="q-chapter-name">NUMBER SYSTEMS</span>
+          </div>
+          <div class="question-score-indicator">+10 PTS + TIME BONUS</div>
+        </div>
+
+        <!-- Question text -->
+        <div class="question-text" id="q-text">
+          Loading question...
+        </div>
+
+        <!-- 4 Multiple Choice Options -->
+        <div class="options-grid" id="q-options-container">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Score popup container -->
+        <div id="score-popup-anchor"></div>
+      </div>
+    </section>
+
+
+    <!-- ==============================================================
+         4. RESULT SCREEN
+         ============================================================== -->
+    <section id="screen-result" class="screen">
+      <!-- Winner Trophy Illustration -->
+      <div class="result-trophy-box" id="result-trophy-icon">
+        <svg viewBox="0 0 100 100" style="width:100%; height:100%; fill:none;">
+          <circle cx="50" cy="50" r="45" fill="rgba(255, 208, 0, 0.1)" stroke="#ffd000" stroke-width="2"/>
+          <path d="M32 30 H68 V46 C68 56 60 64 50 64 C40 64 32 56 32 46 Z" fill="url(#trophyGold)" stroke="#ffd000" stroke-width="2"/>
+          <path d="M32 34 H22 C18 34 16 38 18 44 C20 50 25 54 32 54" stroke="#ffd000" stroke-width="2" stroke-linecap="round"/>
+          <path d="M68 34 H78 C82 34 84 38 82 44 C80 50 75 54 68 54" stroke="#ffd000" stroke-width="2" stroke-linecap="round"/>
+          <rect x="46" y="64" width="8" height="14" fill="#ffd000"/>
+          <path d="M36 78 H64 L68 86 H32 Z" fill="#ffd000"/>
+          <defs>
+            <linearGradient id="trophyGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fff275"/>
+              <stop offset="100%" stop-color="#e5a100"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="result-header">
+        <h2 class="result-title player-won" id="result-banner">CHECKERED FLAG VICTORY!</h2>
+        <p class="result-subtitle" id="result-tagline">Outstanding calculation speed! You crushed the circuit.</p>
+      </div>
+
+      <!-- 4 Stats Cards -->
+      <div class="stats-dashboard">
+        <div class="stat-metric-card">
+          <span class="metric-value hud-score" id="stat-final-score">0</span>
+          <span class="metric-label">FINAL SCORE</span>
+        </div>
+
+        <div class="stat-metric-card">
+          <span class="metric-value" style="color:var(--neon-green);" id="stat-correct-count">0 / 10</span>
+          <span class="metric-label">CORRECT ANSWERS</span>
+        </div>
+
+        <div class="stat-metric-card">
+          <span class="metric-value" style="color:var(--neon-cyan);" id="stat-accuracy">0%</span>
+          <span class="metric-label">ACCURACY</span>
+        </div>
+
+        <div class="stat-metric-card">
+          <span class="metric-value" style="color:var(--neon-red);" id="stat-avg-time">0.0s</span>
+          <span class="metric-label">AVG TIME</span>
+        </div>
+      </div>
+
+      <!-- Question Review Accordion -->
+      <div class="review-section">
+        <button class="review-toggle-btn" onclick="Result.toggleReview()">
+          <span>REVIEW RACE QUESTIONS & SOLUTIONS</span>
+          <span id="review-arrow">▼</span>
+        </button>
+        <div class="review-list" id="review-list-container">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="result-actions">
+        <button class="btn-cyber btn-cyan" onclick="Game.restartRace()">
+          <span>RACE AGAIN</span>
+          <span>⚡</span>
+        </button>
+
+        <button class="btn-cyber btn-outline" onclick="Navigation.goSetup()">
+          <span>CHANGE CAR / CHAPTER</span>
+        </button>
+
+        <button class="btn-cyber btn-outline" onclick="Navigation.goHome()">
+          <span>MAIN MENU</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- COUNTDOWN OVERLAY ("3, 2, 1, GO!") -->
+  <div class="countdown-overlay" id="countdown-overlay">
+    <div class="countdown-number" id="countdown-text">3</div>
+  </div>
+
+
+  <!-- =====================================================================
+       JAVASCRIPT: QUESTION DATA (CHAPTER → [QUESTION, OPTIONS, CORRECTINDEX])
+       ===================================================================== -->
+  <script>
+    /**
+     * ALL QUESTIONS CONFIGURED ACCORDING TO USER SPECIFICATION:
+     * Structure: chapter -> array of [questionText, optionsArray, correctIndex]
+     * Chapters:
+     * 1. Number Systems (16 Questions)
+     * 2. Polynomials (16 Questions)
+     * 3. Coordinate Geometry (16 Questions)
+     * 4. Linear Equations in Two Variables (16 Questions)
+     * 5. Triangles and Circles (16 Questions)
+     * Total: 80 Questions aligned with CBSE Class 9 Mathematics.
+     */
+    const questionsData = {
+      "Number Systems": [
+        ["Which of the following numbers is an irrational number?", ["√4", "√9", "√7", "0.25"], 2],
+        ["The decimal expansion of an irrational number is always:", ["Terminating", "Non-terminating recurring", "Non-terminating non-recurring", "Finite decimal"], 2],
+        ["The number 0.3333... in the form p/q (where p, q are integers, q ≠ 0) is:", ["1/3", "3/10", "33/100", "1/9"], 0],
+        ["Simplify the expression: (√5 + √2)(√5 - √2)", ["3", "7", "√10", "1"], 0],
+        ["Find the value of 64^(1/2):", ["4", "8", "16", "32"], 1],
+        ["The value of (256)^(0.16) × (256)^(0.09) is:", ["4", "16", "64", "2"], 0],
+        ["What is the rationalising factor of the denominator for 1 / (√7 - 2)?", ["√7 - 2", "√7 + 2", "7 + √2", "7 - √2"], 1],
+        ["Between any two given distinct rational numbers, how many rational numbers exist?", ["Zero", "Exactly one", "Infinitely many", "Only ten"], 2],
+        ["The number 0.2353535... (0.23̄5̄) expressed in p/q form is:", ["235/999", "233/990", "235/990", "233/900"], 1],
+        ["Which of the following expressions is equal to x³?", ["x⁶ - x³", "x⁶ · x³", "x⁶ ÷ x³", "(x²)³"], 2],
+        ["Evaluate: (16)^(3/4)", ["4", "8", "12", "16"], 1],
+        ["Is zero (0) a rational number?", ["Yes, it can be written as 0/q (q ≠ 0)", "No, it is an irrational number", "No, it is neither rational nor irrational", "It is undefined"], 0],
+        ["If x = 2 + √3, then what is the value of x + 1/x?", ["2", "4", "2√3", "4√3"], 1],
+        ["The sum of a rational number and an irrational number is always:", ["Rational", "Irrational", "Zero", "An integer"], 1],
+        ["Simplify: (√3 - √2)²", ["1", "5 - 2√6", "5 + 2√6", "1 - 2√6"], 1],
+        ["Find the value of (125)^(-1/3):", ["5", "-5", "1/5", "-1/5"], 2]
+      ],
+
+      "Polynomials": [
+        ["What is the degree of the zero polynomial?", ["0", "1", "Any real number", "Not defined"], 3],
+        ["If p(x) = x² - 4x + 3, what is the value of p(2)?", ["-1", "0", "1", "3"], 0],
+        ["Which of the following algebraic expressions is a polynomial?", ["x² + 2/x", "√x + 5", "x² + 3x - 4", "x^(3/2) + x"], 2],
+        ["Find the zero of the polynomial p(x) = 3x - 6:", ["-2", "2", "3", "6"], 1],
+        ["If (x + 1) is a factor of p(x) = 2x² + kx, find the value of k:", ["-2", "1", "2", "4"], 2],
+        ["Expand using an algebraic identity: (x + 4)(x + 10)", ["x² + 14x + 40", "x² + 40x + 14", "x² - 14x + 40", "x² + 4x + 40"], 0],
+        ["Factorise completely: 49a² - 36b²", ["(7a - 6b)²", "(7a + 6b)(7a - 6b)", "(49a - 36b)(a + b)", "(7a + 6b)²"], 1],
+        ["If x + y + z = 0, then the value of x³ + y³ + z³ is equal to:", ["0", "xyz", "3xyz", "-3xyz"], 2],
+        ["Calculate 105 × 106 using the identity (x+a)(x+b):", ["11130", "11030", "11230", "11120"], 0],
+        ["A polynomial having degree 3 is called a:", ["Linear polynomial", "Quadratic polynomial", "Cubic polynomial", "Constant polynomial"], 2],
+        ["What is the coefficient of x² in the polynomial 2 - x² + x³?", ["2", "1", "-1", "0"], 2],
+        ["Find the remainder when x³ - ax² + 6x - a is divided by (x - a):", ["a", "5a", "6a", "0"], 1],
+        ["If (x - 2) is a factor of x² - 5x + 6, the other factor is:", ["(x - 1)", "(x - 3)", "(x + 3)", "(x + 2)"], 1],
+        ["How many distinct terms are present in the expansion of (a + b + c)²?", ["3", "4", "6", "9"], 2],
+        ["Find the value of 99² using the identity (100 - 1)²:", ["9801", "9901", "9810", "9701"], 0],
+        ["What is the degree of the non-zero constant polynomial p(x) = 5?", ["0", "1", "5", "Not defined"], 0]
+      ],
+
+      "Coordinate Geometry": [
+        ["In which quadrant does the point (-3, -5) lie?", ["Quadrant I", "Quadrant II", "Quadrant III", "Quadrant IV"], 2],
+        ["What are the coordinates of the origin?", ["(0, 0)", "(1, 1)", "(0, 1)", "(1, 0)"], 0],
+        ["The x-coordinate of a point is also known as its:", ["Ordinate", "Abscissa", "Quadrant", "Origin"], 1],
+        ["The point (0, -4) lies on the:", ["Positive x-axis", "Negative x-axis", "Positive y-axis", "Negative y-axis"], 3],
+        ["If both coordinates of a point are positive, the point lies in:", ["Quadrant I", "Quadrant II", "Quadrant III", "Quadrant IV"], 0],
+        ["The abscissa of any point lying on the y-axis is always:", ["0", "1", "-1", "Any real number"], 0],
+        ["What are the signs of coordinates of any point in Quadrant II?", ["(+, +)", "(-, +)", "(-, -)", "(+, -)"], 1],
+        ["The perpendicular distance of the point P(4, 3) from the x-axis is:", ["4 units", "3 units", "7 units", "5 units"], 1],
+        ["The perpendicular distance of the point P(-6, 8) from the y-axis is:", ["6 units", "-6 units", "8 units", "10 units"], 0],
+        ["A point whose ordinate is 6 and abscissa is -2 has coordinates:", ["(6, -2)", "(-2, 6)", "(-2, -6)", "(6, 2)"], 1],
+        ["The points (2, 0), (-3, 0), and (5, 0) all lie on:", ["The y-axis", "The x-axis", "Quadrant I", "The line y = x"], 1],
+        ["In which quadrant does the point (4, -7) lie?", ["Quadrant I", "Quadrant II", "Quadrant III", "Quadrant IV"], 3],
+        ["The coordinate axes divide the Cartesian plane into how many quadrants?", ["2", "4", "6", "8"], 1],
+        ["The line segment joining A(-4, 3) and B(2, 3) is parallel to:", ["The x-axis", "The y-axis", "The origin", "Neither axis"], 0],
+        ["What is the ordinate of the point (7, 0)?", ["7", "0", "-7", "1"], 1],
+        ["If a point (a, b) satisfies a < 0 and b < 0, it lies in:", ["Quadrant I", "Quadrant II", "Quadrant III", "Quadrant IV"], 2]
+      ],
+
+      "Linear Equations in Two Variables": [
+        ["The standard form of a linear equation in two variables is:", ["ax² + bx + c = 0", "ax + by + c = 0", "ax + b = 0", "axy + c = 0"], 1],
+        ["A linear equation in two variables has:", ["A unique solution", "Exactly two solutions", "Infinitely many solutions", "No solution"], 2],
+        ["The graph of 2x + 3y = 6 intersects the x-axis at:", ["(0, 2)", "(3, 0)", "(2, 0)", "(0, 3)"], 1],
+        ["The equation of the x-axis is:", ["x = 0", "y = 0", "x = y", "x + y = 0"], 1],
+        ["If x = 2, y = 1 is a solution of 2x + 3y = k, then k is equal to:", ["5", "7", "8", "1"], 1],
+        ["The equation of the y-axis is:", ["x = 0", "y = 0", "x = 1", "y = 1"], 0],
+        ["The graph of the equation x = 5 is a straight line:", ["Parallel to the x-axis", "Parallel to the y-axis", "Passing through origin", "Inclined at 45°"], 1],
+        ["Any point lying on the graph of y = x has coordinates of the form:", ["(a, -a)", "(a, a)", "(0, a)", "(a, 0)"], 1],
+        ["Which of the following points satisfies the equation x + 2y = 8?", ["(2, 3)", "(3, 2)", "(4, 3)", "(1, 2)"], 0],
+        ["The geometrical representation of any linear equation in two variables is a:", ["Parabola", "Circle", "Straight line", "Hyperbola"], 2],
+        ["Express 2x = -5y in standard form ax + by + c = 0:", ["2x + 5y + 0 = 0", "2x - 5y + 0 = 0", "5x + 2y = 0", "2x + 5y = 1"], 0],
+        ["Find a solution for the linear equation 3x - 2y = 12:", ["(4, 0)", "(0, 6)", "(2, 3)", "(3, 2)"], 0],
+        ["The graph of the equation y = 3 is a straight line:", ["Parallel to the x-axis", "Parallel to the y-axis", "Passing through origin", "Perpendicular to x-axis"], 0],
+        ["Does the graph of the linear equation y = 2x pass through the origin (0, 0)?", ["Yes, always", "No, never", "Only if x > 0", "Cannot be determined"], 0],
+        ["If the perimeter of a rectangle is 28 with length x and breadth y, the equation is:", ["x + y = 28", "2(x + y) = 28", "x - y = 14", "xy = 28"], 1],
+        ["If the point (3, 4) lies on the graph of 3y = ax + 7, then the value of a is:", ["5/3", "3/5", "1", "2"], 0]
+      ],
+
+      "Triangles and Circles": [
+        ["Which of the following is NOT a criterion for congruence of triangles?", ["SAS", "ASA", "AAA", "SSS"], 2],
+        ["The angle subtended by an arc at the centre is _____ the angle subtended by it at any point on the remaining part:", ["Half", "Double", "Equal to", "One-third"], 1],
+        ["The angle inscribed in a semicircle is always equal to:", ["45°", "60°", "90°", "180°"], 2],
+        ["The sum of either pair of opposite angles of a cyclic quadrilateral is:", ["90°", "180°", "270°", "360°"], 1],
+        ["In ΔABC, if AB = AC and ∠B = 50°, then the measure of ∠A is:", ["50°", "80°", "100°", "130°"], 1],
+        ["The longest chord of a circle is called its:", ["Radius", "Secant", "Diameter", "Arc"], 2],
+        ["The perpendicular drawn from the centre of a circle to a chord:", ["Bisects the chord", "Doubles the chord", "Is parallel to the chord", "Trisects the chord"], 0],
+        ["Two right triangles with equal hypotenuses and one equal side are congruent by:", ["SAS", "RHS", "SSS", "AAS"], 1],
+        ["Angles in the same segment of a circle are:", ["Complementary", "Supplementary", "Equal", "Unequal"], 2],
+        ["If the diameter of a circle is 10 cm and a chord is 8 cm long, its distance from centre is:", ["3 cm", "4 cm", "5 cm", "6 cm"], 0],
+        ["What is the measure of each interior angle in an equilateral triangle?", ["45°", "60°", "90°", "120°"], 1],
+        ["In a cyclic quadrilateral ABCD, if ∠A = 70°, what is the measure of ∠C?", ["70°", "110°", "90°", "20°"], 1],
+        ["If ΔABC ≅ ΔPQR under correspondence ABC ↔ PQR, which statement is true?", ["AB = QR", "BC = QR", "AC = PQ", "∠B = ∠P"], 1],
+        ["A chord of length 12 cm is at distance 8 cm from the centre. What is the circle's radius?", ["10 cm", "14 cm", "15 cm", "20 cm"], 0],
+        ["How many circles can pass through three given non-collinear points?", ["Only one", "Two", "Infinitely many", "Zero"], 0],
+        ["In ΔPQR, if PQ = PR and ∠P = 80°, what is the measure of ∠Q?", ["40°", "50°", "80°", "100°"], 1]
+      ]
+    };
+
+
+    /* =====================================================================
+       WEB AUDIO API SOUND ENGINE
+       Pure synthesizer: Countdown beeps, Chimes, Buzzers, and Fanfares.
+       ===================================================================== */
+    const SoundFX = {
+      ctx: null,
+      isMuted: false,
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        const icon = document.getElementById('audio-icon');
+        const btn = document.getElementById('audio-toggle-btn');
+        if (this.isMuted) {
+          icon.textContent = '🔇';
+          btn.classList.add('muted');
+        } else {
+          icon.textContent = '🔊';
+          btn.classList.remove('muted');
+          this.init();
+          this.playBeep(600, 'sine', 0.1, 0.15);
+        }
+      },
+
+      playBeep(freq = 440, type = 'sine', duration = 0.15, vol = 0.2) {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {
+          console.warn('Audio playback error', e);
+        }
+      },
+
+      // Correct answer chime (ascending triumphant chord)
+      playCorrect() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            this.playBeep(freq, 'triangle', 0.22, 0.22);
+          }, idx * 60);
+        });
+      },
+
+      // Wrong answer buzzer (low discordant slide)
+      playWrong() {
+        if (this.isMuted) return;
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(90, this.ctx.currentTime + 0.35);
+
+          gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.35);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch (e) {}
+      },
+
+      // Countdown beeps (3, 2, 1) and GO!
+      playCountdown(isGo = false) {
+        if (this.isMuted) return;
+        if (isGo) {
+          this.playBeep(880, 'triangle', 0.45, 0.3);
+          setTimeout(() => this.playBeep(1320, 'sine', 0.35, 0.2), 80);
+        } else {
+          this.playBeep(440, 'sine', 0.2, 0.25);
+        }
+      },
+
+      // Timer urgency tick
+      playTick() {
+        if (this.isMuted) return;
+        this.playBeep(800, 'sine', 0.04, 0.1);
+      },
+
+      // Victory Fanfare
+      playVictory() {
+        if (this.isMuted) return;
+        const melody = [
+          { f: 523.25, d: 0.15 },
+          { f: 659.25, d: 0.15 },
+          { f: 783.99, d: 0.2 },
+          { f: 1046.50, d: 0.55 }
+        ];
+        melody.forEach((note, i) => {
+          setTimeout(() => {
+            this.playBeep(note.f, 'triangle', note.d, 0.3);
+          }, i * 140);
+        });
+      },
+
+      // Defeat sequence
+      playDefeat() {
+        if (this.isMuted) return;
+        const melody = [
+          { f: 440, d: 0.2 },
+          { f: 415.3, d: 0.2 },
+          { f: 392, d: 0.25 },
+          { f: 349.2, d: 0.6 }
+        ];
+        melody.forEach((note, i) => {
+          setTimeout(() => {
+            this.playBeep(note.f, 'sawtooth', note.d, 0.2);
+          }, i * 160);
+        });
+      }
+    };
+
+
+    /* =====================================================================
+       SVG HYPERCARS RENDERER (3 ORIGINAL PLAYABLE HYPERCARS + 1 RIVAL)
+       ===================================================================== */
+    const Cars = [
+      {
+        id: "apex_neon",
+        name: "APEX NEON",
+        type: "Hyper-Aero Le Mans Prototype",
+        color: "#00f0ff",
+        speed: 96,
+        accel: 98,
+        handling: 92,
+        renderSVG(isSmall = false) {
+          return `
+            <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+              <defs>
+                <linearGradient id="apexBody" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#071018" />
+                  <stop offset="40%" stop-color="#004d66" />
+                  <stop offset="70%" stop-color="#00a3cc" />
+                  <stop offset="100%" stop-color="#00f0ff" />
+                </linearGradient>
+                <linearGradient id="apexCanopy" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stop-color="#002233" />
+                  <stop offset="100%" stop-color="#66f0ff" />
+                </linearGradient>
+                <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Underglow Neon -->
+              <ellipse cx="120" cy="68" rx="85" ry="5" fill="#00f0ff" opacity="0.6" filter="url(#cyanGlow)" />
+              
+              <!-- Rear Aero Wing -->
+              <path d="M 25 32 L 15 15 L 45 15 L 40 32 Z" fill="#0a1520" stroke="#00f0ff" stroke-width="1.5" />
+              <line x1="12" y1="15" x2="50" y2="15" stroke="#00f0ff" stroke-width="2.5" filter="url(#cyanGlow)" />
+
+              <!-- Main Chassis Body -->
+              <path d="M 30 58 Q 45 32 80 30 L 140 28 Q 195 38 230 58 L 225 64 Q 185 64 175 64 Q 165 48 150 48 Q 135 48 128 64 L 75 64 Q 68 48 55 48 Q 42 48 35 64 Z" 
+                    fill="url(#apexBody)" stroke="#00f0ff" stroke-width="1.5" />
+              
+              <!-- Cockpit Canopy Glass -->
+              <path d="M 85 30 Q 115 18 145 28 L 138 32 Q 115 24 92 32 Z" fill="url(#apexCanopy)" stroke="#00f0ff" stroke-width="1" />
+              <path d="M 95 28 L 135 28" stroke="#ffffff" stroke-width="1" opacity="0.8" />
+
+              <!-- Cyber Accent Lines -->
+              <path d="M 50 48 L 120 44 L 205 52" stroke="#00f0ff" stroke-width="2" fill="none" filter="url(#cyanGlow)" />
+              <polygon points="215,54 232,58 215,59" fill="#00f0ff" filter="url(#cyanGlow)" />
+
+              <!-- Front Splitter Canards -->
+              <path d="M 210 63 L 235 63 L 228 58 Z" fill="#03080e" stroke="#00f0ff" stroke-width="1" />
+
+              <!-- Wheels (Rear and Front) -->
+              <g transform="translate(55, 60)">
+                <circle cx="0" cy="0" r="14" fill="#080c14" stroke="#00f0ff" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#121824" stroke="#00f0ff" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#00f0ff" filter="url(#cyanGlow)" />
+              </g>
+
+              <g transform="translate(150, 60)">
+                <circle cx="0" cy="0" r="14" fill="#080c14" stroke="#00f0ff" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#121824" stroke="#00f0ff" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#00f0ff" filter="url(#cyanGlow)" />
+              </g>
+            </svg>
+          `;
+        }
+      },
+      {
+        id: "phantom_cyber",
+        name: "PHANTOM CYBER",
+        type: "Angular Cyber-Muscle Weapon",
+        color: "#ff0055",
+        speed: 98,
+        accel: 93,
+        handling: 94,
+        renderSVG(isSmall = false) {
+          return `
+            <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+              <defs>
+                <linearGradient id="phantomBody" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#14060b" />
+                  <stop offset="40%" stop-color="#55001d" />
+                  <stop offset="75%" stop-color="#b3003b" />
+                  <stop offset="100%" stop-color="#ff0055" />
+                </linearGradient>
+                <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Underglow Neon -->
+              <ellipse cx="120" cy="68" rx="85" ry="5" fill="#ff0055" opacity="0.6" filter="url(#redGlow)" />
+
+              <!-- Cyber Razor Spoiler -->
+              <polygon points="20,18 42,18 35,35 15,35" fill="#1a0710" stroke="#ff0055" stroke-width="1.5" />
+              <line x1="16" y1="18" x2="48" y2="18" stroke="#ff0055" stroke-width="3" filter="url(#redGlow)" />
+
+              <!-- Main Muscular Chiseled Body -->
+              <path d="M 28 58 L 45 32 L 85 30 L 135 26 L 180 38 L 232 58 L 225 64 Q 185 64 175 64 Q 165 48 150 48 Q 135 48 128 64 L 75 64 Q 68 48 55 48 Q 42 48 35 64 Z" 
+                    fill="url(#phantomBody)" stroke="#ff0055" stroke-width="1.5" />
+
+              <!-- Roof Scoop & Canopy -->
+              <polygon points="85,30 110,20 135,26 128,30" fill="#ff0055" opacity="0.4" />
+              <path d="M 88 30 L 128 27 L 155 36 L 95 36 Z" fill="#1f0711" stroke="#ff0055" stroke-width="1" />
+              
+              <!-- Aggressive Cyber Laser Strakes -->
+              <polyline points="45,46 115,42 165,44 215,54" stroke="#ff0055" stroke-width="2.5" fill="none" filter="url(#redGlow)" />
+              <polygon points="218,52 234,56 218,57" fill="#ffffff" filter="url(#redGlow)" />
+
+              <!-- Wheels with Hot Red Accents -->
+              <g transform="translate(55, 60)">
+                <circle cx="0" cy="0" r="14" fill="#0c0709" stroke="#ff0055" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#1e0c13" stroke="#ff0055" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#ff0055" filter="url(#redGlow)" />
+              </g>
+
+              <g transform="translate(150, 60)">
+                <circle cx="0" cy="0" r="14" fill="#0c0709" stroke="#ff0055" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#1e0c13" stroke="#ff0055" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#ff0055" filter="url(#redGlow)" />
+              </g>
+            </svg>
+          `;
+        }
+      },
+      {
+        id: "viper_gt",
+        name: "VIPER GT",
+        type: "Shark-Fin Exoskeleton Weapon",
+        color: "#00ffaa",
+        speed: 94,
+        accel: 96,
+        handling: 97,
+        renderSVG(isSmall = false) {
+          return `
+            <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+              <defs>
+                <linearGradient id="viperBody" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#04140e" />
+                  <stop offset="45%" stop-color="#004d33" />
+                  <stop offset="80%" stop-color="#00b377" />
+                  <stop offset="100%" stop-color="#00ffaa" />
+                </linearGradient>
+                <filter id="greenGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Underglow Neon -->
+              <ellipse cx="120" cy="68" rx="85" ry="5" fill="#00ffaa" opacity="0.6" filter="url(#greenGlow)" />
+
+              <!-- Shark Fin Stabilizer -->
+              <path d="M 60 30 Q 100 12 130 26 L 125 32 Q 95 24 65 32 Z" fill="#ffd000" stroke="#00ffaa" stroke-width="1" />
+
+              <!-- Main Chassis -->
+              <path d="M 28 58 Q 50 34 85 30 L 140 28 Q 190 34 232 58 L 225 64 Q 185 64 175 64 Q 165 48 150 48 Q 135 48 128 64 L 75 64 Q 68 48 55 48 Q 42 48 35 64 Z" 
+                    fill="url(#viperBody)" stroke="#00ffaa" stroke-width="1.5" />
+
+              <!-- Canopy Glass with Gold Shimmer -->
+              <path d="M 85 30 Q 115 20 145 28 L 138 32 Q 115 26 92 32 Z" fill="#00ffaa" opacity="0.3" stroke="#ffd000" stroke-width="1" />
+
+              <!-- Acid Neon Lightning Strakes -->
+              <path d="M 45 48 L 115 44 L 170 46 L 210 54" stroke="#00ffaa" stroke-width="2" fill="none" filter="url(#greenGlow)" />
+              <circle cx="218" cy="55" r="3" fill="#ffd000" filter="url(#greenGlow)" />
+
+              <!-- Wheels with High-Speed Lime Rings -->
+              <g transform="translate(55, 60)">
+                <circle cx="0" cy="0" r="14" fill="#07120e" stroke="#00ffaa" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#0d241c" stroke="#ffd000" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#00ffaa" filter="url(#greenGlow)" />
+              </g>
+
+              <g transform="translate(150, 60)">
+                <circle cx="0" cy="0" r="14" fill="#07120e" stroke="#00ffaa" stroke-width="2" />
+                <circle cx="0" cy="0" r="8" fill="#0d241c" stroke="#ffd000" stroke-width="1" />
+                <circle cx="0" cy="0" r="3" fill="#00ffaa" filter="url(#greenGlow)" />
+              </g>
+            </svg>
+          `;
+        }
+      }
+    ];
+
+    // RIVAL CAR: SHADOW REAPER
+    const RivalCar = {
+      name: "SHADOW REAPER",
+      renderSVG() {
+        return `
+          <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="rivalBody" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#0a050d" />
+                <stop offset="45%" stop-color="#380838" />
+                <stop offset="80%" stop-color="#7a0052" />
+                <stop offset="100%" stop-color="#ff0055" />
+              </linearGradient>
+              <filter id="rivalGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Hostile Underglow -->
+            <ellipse cx="120" cy="68" rx="85" ry="5" fill="#ff0055" opacity="0.65" filter="url(#rivalGlow)" />
+
+            <!-- Wicked Rear Wing -->
+            <polygon points="18,16 42,16 35,35 15,35" fill="#14061a" stroke="#ff0055" stroke-width="1.5" />
+            <line x1="14" y1="16" x2="48" y2="16" stroke="#ff0055" stroke-width="2.5" filter="url(#rivalGlow)" />
+
+            <!-- Main Stealth Body -->
+            <path d="M 28 58 L 48 34 L 88 30 L 138 26 L 180 38 L 232 58 L 225 64 Q 185 64 175 64 Q 165 48 150 48 Q 135 48 128 64 L 75 64 Q 68 48 55 48 Q 42 48 35 64 Z" 
+                  fill="url(#rivalBody)" stroke="#ff0055" stroke-width="1.5" />
+
+            <!-- Sinister Red Eye Headlight -->
+            <polygon points="214,52 230,57 214,58" fill="#ff0055" filter="url(#rivalGlow)" />
+            <polyline points="45,46 110,43 160,45 208,54" stroke="#ff0055" stroke-width="2" fill="none" filter="url(#rivalGlow)" />
+
+            <!-- Dark Turbine Wheels -->
+            <g transform="translate(55, 60)">
+              <circle cx="0" cy="0" r="14" fill="#08040d" stroke="#ff0055" stroke-width="2" />
+              <circle cx="0" cy="0" r="8" fill="#1d0724" stroke="#ff0055" stroke-width="1" />
+              <circle cx="0" cy="0" r="3" fill="#ff0055" filter="url(#rivalGlow)" />
+            </g>
+
+            <g transform="translate(150, 60)">
+              <circle cx="0" cy="0" r="14" fill="#08040d" stroke="#ff0055" stroke-width="2" />
+              <circle cx="0" cy="0" r="8" fill="#1d0724" stroke="#ff0055" stroke-width="1" />
+              <circle cx="0" cy="0" r="3" fill="#ff0055" filter="url(#rivalGlow)" />
+            </g>
+          </svg>
+        `;
+      }
+    };
+
+
+    /* =====================================================================
+       NAVIGATION CONTROLLER
+       ===================================================================== */
+    const Navigation = {
+      currentScreen: 'home',
+
+      showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(`screen-${screenId}`);
+        if (target) {
+          target.classList.add('active');
+          this.currentScreen = screenId;
+          window.scrollTo(0, 0);
+        }
+      },
+
+      goHome() {
+        if (Game.isRunning) {
+          if (!confirm("A race is currently underway. Abandon race and return to main menu?")) {
+            return;
+          }
+          Game.abortRace();
+        }
+        this.showScreen('home');
+        Setup.refreshBestScore();
+      },
+
+      goSetup() {
+        if (Game.isRunning) Game.abortRace();
+        this.showScreen('setup');
+      }
+    };
+
+
+    /* =====================================================================
+       SETUP SCREEN CONTROLLER
+       ===================================================================== */
+    const Setup = {
+      selectedCarIndex: 0,
+      selectedChapter: "Mixed",
+      selectedRounds: 10,
+
+      init() {
+        this.renderCars();
+        this.renderChapters();
+        this.refreshBestScore();
+        // Render hero showcase car on home screen
+        document.getElementById('home-car-showcase').innerHTML = Cars[0].renderSVG();
+      },
+
+      refreshBestScore() {
+        const best = localStorage.getItem('maths_racer_highscore') || 0;
+        document.getElementById('header-best-score').textContent = best;
+      },
+
+      renderCars() {
+        const container = document.getElementById('cars-selection-container');
+        container.innerHTML = Cars.map((car, idx) => `
+          <div class="car-card ${idx === this.selectedCarIndex ? 'selected' : ''}" onclick="Setup.selectCar(${idx})">
+            <div class="car-preview-box">
+              ${car.renderSVG(true)}
+            </div>
+            <div class="car-card-name" style="color:${car.color};">${car.name}</div>
+            <div class="car-card-desc">${car.type}</div>
+            <div class="car-stat-row">
+              <span>SPEED</span>
+              <div class="stat-bar-container">
+                <div class="stat-bar-fill" style="width:${car.speed}%; background:${car.color};"></div>
+              </div>
+            </div>
+            <div class="car-stat-row">
+              <span>NITRO</span>
+              <div class="stat-bar-container">
+                <div class="stat-bar-fill" style="width:${car.accel}%; background:${car.color};"></div>
+              </div>
+            </div>
+            <div class="car-stat-row">
+              <span>CONTROL</span>
+              <div class="stat-bar-container">
+                <div class="stat-bar-fill" style="width:${car.handling}%; background:${car.color};"></div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      selectCar(idx) {
+        SoundFX.playBeep(650, 'sine', 0.1, 0.15);
+        this.selectedCarIndex = idx;
+        this.renderCars();
+        // Update Home showcase car too
+        document.getElementById('home-car-showcase').innerHTML = Cars[idx].renderSVG();
+      },
+
+      renderChapters() {
+        const container = document.getElementById('chapters-selection-container');
+        const chapterList = Object.keys(questionsData);
+        // Include "Mixed" at the front
+        const allOptions = ["Mixed", ...chapterList];
+
+        const icons = {
+          "Mixed": "🏆",
+          "Number Systems": "🔢",
+          "Polynomials": "📈",
+          "Coordinate Geometry": "📍",
+          "Linear Equations in Two Variables": "⚖️",
+          "Triangles and Circles": "📐"
+        };
+
+        container.innerHTML = allOptions.map(ch => {
+          const count = ch === "Mixed" ? "All Chapters Shuffled" : `${questionsData[ch].length} Questions`;
+          const isSelected = ch === this.selectedChapter;
+          return `
+            <div class="chapter-card ${isSelected ? 'selected' : ''}" onclick="Setup.selectChapter('${ch}')">
+              <div class="chapter-icon">${icons[ch] || '📚'}</div>
+              <div>
+                <div class="chapter-name">${ch}</div>
+                <div class="chapter-count">${count}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      selectChapter(ch) {
+        SoundFX.playBeep(580, 'sine', 0.1, 0.15);
+        this.selectedChapter = ch;
+        this.renderChapters();
+      },
+
+      selectRounds(rounds, el) {
+        SoundFX.playBeep(520, 'sine', 0.1, 0.15);
+        this.selectedRounds = rounds;
+        document.querySelectorAll('.round-count-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+      },
+
+      startRace() {
+        SoundFX.init();
+        Game.initRace({
+          carIndex: this.selectedCarIndex,
+          chapter: this.selectedChapter,
+          totalQuestions: this.selectedRounds
+        });
+      }
+    };
+
+
+    /* =====================================================================
+       RACE ENGINE & GAME STATE
+       ===================================================================== */
+    const Game = {
+      isRunning: false,
+      config: null,
+      questionQueue: [],
+      currentQIndex: 0,
+
+      score: 0,
+      correctCount: 0,
+      wrongCount: 0,
+      reactionTimes: [],
+      reviewLog: [], // stores question, chosenOption, correctOption, isCorrect, timeSpent
+
+      playerProgress: 0, // 0 to 100 percentage
+      rivalProgress: 0,
+
+      timerInterval: null,
+      timerSeconds: 15.0,
+      timerMax: 15.0,
+      isTimerActive: false,
+
+      initRace(config) {
+        this.config = config;
+        this.isRunning = true;
+        this.score = 0;
+        this.correctCount = 0;
+        this.wrongCount = 0;
+        this.reactionTimes = [];
+        this.reviewLog = [];
+        this.currentQIndex = 0;
+        this.playerProgress = 0;
+        this.rivalProgress = 0;
+
+        // Build questions pool
+        let pool = [];
+        if (config.chapter === "Mixed") {
+          Object.keys(questionsData).forEach(ch => {
+            questionsData[ch].forEach(qItem => {
+              pool.push({
+                chapter: ch,
+                question: qItem[0],
+                options: qItem[1],
+                correctIndex: qItem[2]
+              });
+            });
+          });
+        } else {
+          questionsData[config.chapter].forEach(qItem => {
+            pool.push({
+              chapter: config.chapter,
+              question: qItem[0],
+              options: qItem[1],
+              correctIndex: qItem[2]
+            });
+          });
+        }
+
+        // Shuffle with Fisher-Yates
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        // Take requested number of questions
+        this.questionQueue = pool.slice(0, config.totalQuestions);
+
+        // Setup sprites
+        const chosenCar = Cars[config.carIndex];
+        document.getElementById('player-car-svg-container').innerHTML = chosenCar.renderSVG();
+        document.getElementById('lane-player-car-name').textContent = chosenCar.name;
+        document.getElementById('rival-car-svg-container').innerHTML = RivalCar.renderSVG();
+
+        // Switch to Race screen
+        Navigation.showScreen('race');
+        this.updateHUD();
+        this.updateCarPositions();
+
+        // Launch 3-2-1 Countdown
+        this.runCountdown(() => {
+          this.loadQuestion();
+        });
+      },
+
+      runCountdown(callback) {
+        const overlay = document.getElementById('countdown-overlay');
+        const text = document.getElementById('countdown-text');
+        overlay.classList.add('active');
+
+        let count = 3;
+        text.textContent = count;
+        text.classList.remove('go');
+        SoundFX.playCountdown(false);
+
+        const interval = setInterval(() => {
+          count--;
+          if (count > 0) {
+            text.textContent = count;
+            SoundFX.playCountdown(false);
+          } else if (count === 0) {
+            text.textContent = "GO!";
+            text.classList.add('go');
+            SoundFX.playCountdown(true);
+          } else {
+            clearInterval(interval);
+            overlay.classList.remove('active');
+            callback();
+          }
+        }, 850);
+      },
+
+      updateHUD() {
+        document.getElementById('hud-lap-counter').textContent = `${this.currentQIndex + 1} / ${this.questionQueue.length}`;
+        document.getElementById('hud-score').textContent = this.score;
+
+        const badge = document.getElementById('hud-leader-badge');
+        if (this.playerProgress >= this.rivalProgress) {
+          badge.textContent = "P1 • LEADING";
+          badge.className = "hud-leader-badge badge-leading";
+        } else {
+          badge.textContent = "P2 • CHASING";
+          badge.className = "hud-leader-badge badge-chasing";
+        }
+      },
+
+      updateCarPositions() {
+        // Track width range: from left 20px (start) to right (approx 78% of track width)
+        // 0% -> 20px; 100% -> calc(100% - 170px)
+        const playerSprite = document.getElementById('sprite-player');
+        const rivalSprite = document.getElementById('sprite-rival');
+
+        const pClamped = Math.min(Math.max(this.playerProgress, 0), 100);
+        const rClamped = Math.min(Math.max(this.rivalProgress, 0), 100);
+
+        playerSprite.style.left = `calc(20px + ${pClamped * 0.72}%)`;
+        rivalSprite.style.left = `calc(20px + ${rClamped * 0.72}%)`;
+      },
+
+      loadQuestion() {
+        if (!this.isRunning) return;
+
+        if (this.currentQIndex >= this.questionQueue.length) {
+          this.finishRace();
+          return;
+        }
+
+        const q = this.questionQueue[this.currentQIndex];
+        this.updateHUD();
+
+        document.getElementById('q-chapter-name').textContent = q.chapter;
+        document.getElementById('q-text').textContent = q.question;
+
+        const container = document.getElementById('q-options-container');
+        const letters = ['A', 'B', 'C', 'D'];
+        container.innerHTML = q.options.map((opt, i) => `
+          <button class="option-btn" id="opt-btn-${i}" onclick="Game.handleAnswer(${i})">
+            <span class="option-letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('');
+
+        this.startTimer();
+      },
+
+      startTimer() {
+        clearInterval(this.timerInterval);
+        this.timerSeconds = 15.0;
+        this.isTimerActive = true;
+
+        const timerText = document.getElementById('timer-text');
+        const timerFill = document.getElementById('timer-fill');
+        timerFill.className = "timer-fill";
+        timerFill.style.width = "100%";
+        timerText.textContent = "15.0s";
+
+        let lastTickInt = 15;
+        const startTime = Date.now();
+
+        this.timerInterval = setInterval(() => {
+          if (!this.isTimerActive) return;
+
+          const elapsed = (Date.now() - startTime) / 1000;
+          const remaining = Math.max(0, 15.0 - elapsed);
+          this.timerSeconds = remaining;
+
+          const pct = (remaining / 15.0) * 100;
+          timerFill.style.width = `${pct}%`;
+          timerText.textContent = `${remaining.toFixed(1)}s`;
+
+          // Change colors as urgency increases
+          if (remaining <= 4.0) {
+            timerFill.className = "timer-fill danger";
+            const currentInt = Math.ceil(remaining);
+            if (currentInt !== lastTickInt) {
+              SoundFX.playTick();
+              lastTickInt = currentInt;
+            }
+          } else if (remaining <= 8.0) {
+            timerFill.className = "timer-fill warning";
+          }
+
+          if (remaining <= 0) {
+            clearInterval(this.timerInterval);
+            this.handleTimeout();
+          }
+        }, 50);
+      },
+
+      stopTimer() {
+        this.isTimerActive = false;
+        clearInterval(this.timerInterval);
+      },
+
+      handleAnswer(selectedIndex) {
+        if (!this.isTimerActive) return;
+        this.stopTimer();
+
+        // Lock all options
+        document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+
+        const q = this.questionQueue[this.currentQIndex];
+        const isCorrect = selectedIndex === q.correctIndex;
+        const timeSpent = 15.0 - this.timerSeconds;
+        this.reactionTimes.push(timeSpent);
+
+        // Highlight selected
+        const selectedBtn = document.getElementById(`opt-btn-${selectedIndex}`);
+        const correctBtn = document.getElementById(`opt-btn-${q.correctIndex}`);
+
+        // Record for review
+        this.reviewLog.push({
+          question: q.question,
+          chapter: q.chapter,
+          userChoice: q.options[selectedIndex],
+          correctChoice: q.options[q.correctIndex],
+          isCorrect: isCorrect
+        });
+
+        // Step distance forward per round
+        const step = 100 / this.questionQueue.length;
+
+        if (isCorrect) {
+          // Rule: "A correct answer moves the player's car forward and adds 10 plus the remaining seconds to the score."
+          const bonus = Math.ceil(this.timerSeconds);
+          const earned = 10 + bonus;
+          this.score += earned;
+          this.correctCount++;
+
+          selectedBtn.classList.add('correct');
+          SoundFX.playCorrect();
+
+          // Move player car
+          this.playerProgress += step;
+          this.triggerPlayerSurge();
+          this.showScorePopup(`+${earned} PTS!`);
+        } else {
+          // Rule: "A wrong answer or timeout moves the rival forward."
+          this.wrongCount++;
+          selectedBtn.classList.add('wrong');
+          if (correctBtn) correctBtn.classList.add('correct');
+          SoundFX.playWrong();
+
+          // Move rival car
+          this.rivalProgress += step;
+          this.triggerRivalSurge();
+        }
+
+        this.updateCarPositions();
+        this.updateHUD();
+
+        // Advance to next question after brief learning pause
+        setTimeout(() => {
+          this.currentQIndex++;
+          this.loadQuestion();
+        }, 1350);
+      },
+
+      handleTimeout() {
+        if (!this.isTimerActive && this.timerSeconds > 0) return;
+        this.stopTimer();
+
+        document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+        const q = this.questionQueue[this.currentQIndex];
+        this.reactionTimes.push(15.0);
+        this.wrongCount++;
+
+        // Reveal correct
+        const correctBtn = document.getElementById(`opt-btn-${q.correctIndex}`);
+        if (correctBtn) correctBtn.classList.add('correct');
+        SoundFX.playWrong();
+
+        this.reviewLog.push({
+          question: q.question,
+          chapter: q.chapter,
+          userChoice: "TIME EXPIRED (No Answer)",
+          correctChoice: q.options[q.correctIndex],
+          isCorrect: false
+        });
+
+        // Move rival car forward
+        const step = 100 / this.questionQueue.length;
+        this.rivalProgress += step;
+        this.triggerRivalSurge();
+
+        this.updateCarPositions();
+        this.updateHUD();
+
+        setTimeout(() => {
+          this.currentQIndex++;
+          this.loadQuestion();
+        }, 1350);
+      },
+
+      triggerPlayerSurge() {
+        const sprite = document.getElementById('sprite-player');
+        sprite.classList.add('surging');
+        setTimeout(() => sprite.classList.remove('surging'), 900);
+      },
+
+      triggerRivalSurge() {
+        const sprite = document.getElementById('sprite-rival');
+        sprite.classList.add('rival-surging');
+        setTimeout(() => sprite.classList.remove('rival-surging'), 900);
+      },
+
+      showScorePopup(text) {
+        const anchor = document.getElementById('score-popup-anchor');
+        const pop = document.createElement('div');
+        pop.className = 'score-popup';
+        pop.textContent = text;
+        anchor.appendChild(pop);
+        setTimeout(() => pop.remove(), 1100);
+      },
+
+      abortRace() {
+        this.isRunning = false;
+        this.stopTimer();
+      },
+
+      finishRace() {
+        this.isRunning = false;
+        this.stopTimer();
+
+        // Check high score
+        const oldBest = parseInt(localStorage.getItem('maths_racer_highscore') || '0', 10);
+        if (this.score > oldBest) {
+          localStorage.setItem('maths_racer_highscore', this.score);
+        }
+        Setup.refreshBestScore();
+
+        Result.displayResults({
+          score: this.score,
+          correctCount: this.correctCount,
+          total: this.questionQueue.length,
+          reactionTimes: this.reactionTimes,
+          playerProgress: this.playerProgress,
+          rivalProgress: this.rivalProgress,
+          reviewLog: this.reviewLog
+        });
+      },
+
+      restartRace() {
+        if (!this.config) {
+          Navigation.goSetup();
+          return;
+        }
+        this.initRace(this.config);
+      }
+    };
+
+
+    /* =====================================================================
+       RESULT SCREEN CONTROLLER
+       ===================================================================== */
+    const Result = {
+      isReviewOpen: false,
+
+      displayResults(data) {
+        Navigation.showScreen('result');
+
+        const banner = document.getElementById('result-banner');
+        const tagline = document.getElementById('result-tagline');
+
+        // Winner determination: player won if they scored more or covered more distance
+        const isPlayerWinner = data.playerProgress >= data.rivalProgress && data.correctCount >= Math.ceil(data.total / 2);
+
+        if (isPlayerWinner) {
+          banner.textContent = "CHECKERED FLAG VICTORY!";
+          banner.className = "result-title player-won";
+          tagline.textContent = `Outstanding driving! You outpaced the rival hypercar and conquered the CBSE circuit!`;
+          SoundFX.playVictory();
+        } else {
+          banner.textContent = "RIVAL TOOK THE LEAD!";
+          banner.className = "result-title rival-won";
+          tagline.textContent = `The rival hypercar crossed first this round. Review your answers and race again!`;
+          SoundFX.playDefeat();
+        }
+
+        // Stats
+        document.getElementById('stat-final-score').textContent = data.score;
+        document.getElementById('stat-correct-count').textContent = `${data.correctCount} / ${data.total}`;
+
+        const accuracy = Math.round((data.correctCount / data.total) * 100);
+        document.getElementById('stat-accuracy').textContent = `${accuracy}%`;
+
+        const avgTime = data.reactionTimes.length
+          ? (data.reactionTimes.reduce((a, b) => a + b, 0) / data.reactionTimes.length).toFixed(1)
+          : '0.0';
+        document.getElementById('stat-avg-time').textContent = `${avgTime}s`;
+
+        // Populate review list
+        const reviewContainer = document.getElementById('review-list-container');
+        reviewContainer.innerHTML = data.reviewLog.map((item, idx) => `
+          <div class="review-item ${item.isCorrect ? '' : 'wrong-item'}">
+            <div class="review-q-text">Q${idx + 1}. [${item.chapter}] ${item.question}</div>
+            <div class="review-ans-row">
+              <span class="${item.isCorrect ? 'ans-correct' : 'ans-user-wrong'}">
+                Your Answer: ${item.userChoice} ${item.isCorrect ? '✓' : '✗'}
+              </span>
+              ${!item.isCorrect ? `<span class="ans-correct">Correct: ${item.correctChoice}</span>` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        // Ensure review starts collapsed
+        this.isReviewOpen = false;
+        reviewContainer.classList.remove('open');
+        document.getElementById('review-arrow').textContent = '▼';
+      },
+
+      toggleReview() {
+        this.isReviewOpen = !this.isReviewOpen;
+        const container = document.getElementById('review-list-container');
+        const arrow = document.getElementById('review-arrow');
+        if (this.isReviewOpen) {
+          container.classList.add('open');
+          arrow.textContent = '▲';
+        } else {
+          container.classList.remove('open');
+          arrow.textContent = '▼';
+        }
+      }
+    };
+
+
+    /* =====================================================================
+       INITIALIZATION
+       ===================================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      Setup.init();
+
+      // Listen for first interaction to unlock audio
+      const unlockAudio = () => {
+        SoundFX.init();
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+      };
+      window.addEventListener('click', unlockAudio, { passive: true });
+      window.addEventListener('touchstart', unlockAudio, { passive: true });
+    });
+  </script>
+</body>
+</html>
